@@ -1,0 +1,30 @@
+import os.path
+import glob
+folder_path = r'S:\data_file'
+file_type = r'\*txt'
+def create_chunk(input_file):
+    max_lines_per_file = 200
+    output_file_prefix = "output_file_"
+
+    with open(input_file, "r") as infile:
+        count = 0
+        outfile = None
+        for line in infile:
+            if count % max_lines_per_file == 0:
+                if outfile:
+                    outfile.close()
+                outfile = open(output_file_prefix + str(count // max_lines_per_file) + ".txt", "w")
+            outfile.write(line)
+            count += 1
+        if outfile:
+            outfile.close()
+
+files = glob.glob(folder_path + file_type)
+max_file = max(files, key=os.path.getctime)
+#print(max_file)
+current_file_name=(max_file.replace(folder_path,''))
+print(current_file_name)
+exclude = '\\'
+new_file_name = ''.join(ch for ch in current_file_name if ch not in exclude)
+#file_param = "stock_data.txt"
+create_chunk(new_file_name)
